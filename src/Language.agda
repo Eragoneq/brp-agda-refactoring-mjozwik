@@ -26,7 +26,7 @@ data _∈_ : Ty → Ctx → Set where
 
 data _⊢_ : Ctx → Ty → Set where
   -- Basic constructors
-  t    : ∀ {Γ}
+  unit : ∀ {Γ}
        → Γ ⊢ unitT
 
   num  : ∀ {Γ}

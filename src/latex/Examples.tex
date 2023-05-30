@@ -56,17 +56,3 @@ v5 = numV 58
 
 ↓ex5 : ∅ ⊢ ex5 ↓ v5
 ↓ex5 = ↓app ↓fun (↓tup ↓num ↓num) (↓add (↓fst (↓var here)) (↓snd (↓var here)))
-
--- EX 6 (nested mixed type tuples)
-ex6 : [] ⊢ tupT (tupT numT numT) numT
-ex6 = (((num 3) , (num 4)) ,  (num 6) )
-
--- EX 7 (higher order functions)
-ex7 : [] ⊢ numT
-ex7 = app (fun (add (add (app (var here) (num 1)) (app (var here) (num 4))) (app (var here) (num 9)))) (app (fun (fun (add (var here) (var (there here))))) (num 5))
-
-v7 : Val
-v7 = numV 29
-
-↓ex7 : ∅ ⊢ ex7 ↓ v7
-↓ex7 = ↓app ↓fun (↓app ↓fun ↓num ↓fun) (↓add (↓add (↓app (↓var here) ↓num (↓add (↓var here) (↓var (there here)))) (↓app (↓var here) ↓num (↓add (↓var here) (↓var (there here))))) (↓app (↓var here) ↓num (↓add (↓var here) (↓var (there here)))))
