@@ -5,6 +5,7 @@ open import Data.Empty using (⊥; ⊥-elim)
 open import Data.Nat using (ℕ; zero; suc; _<_; _≤?_; z≤n; s≤s)
 open import Relation.Nullary using (¬_)
 open import Language
+open import Refactoring2
 
 
 -- EX 1 (basic arithmetic)
@@ -70,3 +71,18 @@ v7 = numV 29
 
 ↓ex7 : ∅ ⊢ ex7 ↓ v7
 ↓ex7 = ↓app ↓fun (↓app ↓fun ↓num ↓fun) (↓add (↓add (↓app (↓var here) ↓num (↓add (↓var here) (↓var (there here)))) (↓app (↓var here) ↓num (↓add (↓var here) (↓var (there here))))) (↓app (↓var here) ↓num (↓add (↓var here) (↓var (there here)))))
+
+-- EX 8 (multi-arg functions)
+ex8 : [] ⊢ numT
+ex8 = app₂ (fun₂ (add (var here) (var (there here)))) (num 5) (num 9)
+
+v8 : Val
+v8 = numV 14
+
+↓ex8 : ∅ ⊢ ex8 ↓ v8
+↓ex8 = ↓app₂ ↓fun₂ ↓num ↓num (↓add (↓var here) (↓var (there here)))
+
+-- EX 9 (long application chain)
+
+ex9 : [] ⊢ numT
+ex9 = app (app (app (app (fun (fun (fun (fun (add (add (var here) (var (there here))) (add (var (there (there here))) (var (there (there (there here))))))))))  (num 4)) (num 3)) (num 2)) (num 1)
