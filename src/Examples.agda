@@ -82,7 +82,29 @@ v8 = numV 14
 ↓ex8 : ∅ ⊢ ex8 ↓ v8
 ↓ex8 = ↓app₂ ↓fun₂ ↓num ↓num (↓add (↓var here) (↓var (there here)))
 
+↓ex8₁ : ∅ ⊢ (ref-curry ex8) ↓ v8
+↓ex8₁ = ↓app (↓app ↓fun ↓num ↓fun) ↓num (↓add (↓var here) (↓var (there here)))
+
 -- EX 9 (long application chain)
 
 ex9 : [] ⊢ numT
 ex9 = app (app (app (app (fun (fun (fun (fun (add (add (var here) (var (there here))) (add (var (there (there here))) (var (there (there (there here))))))))))  (num 4)) (num 3)) (num 2)) (num 1)
+
+v9 : Val
+v9 = numV 10
+
+-- EX 10
+ex10 : [] ⊢ numT ⇒ numT
+ex10 = fun (app₂ (fun₂ (add (var here) (var (there here)))) (num 5) (num 9))
+
+v10 : Val
+v10 = closV {t = numT} ∅
+        (app (app (fun (fun (add (var here) (var (there here))))) (num 9))
+         (num 5))
+
+v10₁ : Val
+v10₁ = closV {t = numT} ∅
+         (app₂ (fun₂ (add (var here) (var (there here)))) (num 5) (num 9))
+
+↓ex10 : ∅ ⊢ (ex10) ↓ v10₁
+↓ex10 = ↓fun

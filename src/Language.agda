@@ -17,7 +17,7 @@ data Ty : Set where
   tupT  : Ty → Ty → Ty
   _⇒_   : Ty → Ty → Ty
   /_/_⇒_ : Ty → Ty → Ty → Ty
-  _⭆_   : List Ty → Ty → Ty
+--  _⭆_   : List Ty → Ty → Ty
 
 -- List of types, with the type of the most recently bound variable on the right
 Ctx = List Ty
@@ -25,7 +25,6 @@ Ctx = List Ty
 Env : Ctx → Set
 data _⊢_ : Ctx → Ty → Set
 data Val : Set
-
 
 private
   variable
@@ -125,7 +124,7 @@ data Val where
   tupV   : Val → Val → Val
   closV  : Env Γ → (t ∷ Γ) ⊢ u → Val
   closV₂ : Env Γ → (t ∷ u ∷ Γ) ⊢ v → Val
-  closVₙ : Env Γ → (l ++ Γ) ⊢ t → Val
+--  closVₙ : Env Γ → (l ++ Γ) ⊢ t → Val
 
 Env Γ = {t : Ty} → t ∈ Γ → Val
 
