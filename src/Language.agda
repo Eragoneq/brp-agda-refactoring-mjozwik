@@ -22,25 +22,20 @@ data Ty : Set where
 -- List of types, with the type of the most recently bound variable on the right
 Ctx = List Ty
 
-Env : Ctx → Set
+data Env : Ctx → Set
 data _⊢_ : Ctx → Ty → Set
-data Val : Set
+data Val : Ty → Set
 
 private
   variable
     Γ Δ : Ctx
     γ : Env Γ
     δ : Env Δ
-    v1 v2 : Val
     n : ℕ
     t u v w : Ty
+    v1 : Val t
+    v2 : Val u
     l : List Ty
-
-data TypeResolver (Γ : Ctx) : List Ty → Set where
-    []ᵀ : TypeResolver Γ []
-    _∷_ : (Γ ⊢ t) → TypeResolver Γ l → TypeResolver Γ (t ∷ l)
-
--- mapType
 
 data _∈_ : Ty → Ctx → Set where
   here  : ∀ {a as} → a ∈ (a ∷ as)
@@ -119,28 +114,23 @@ data _⊢_ where
  --      → Γ ⊢ t
 
 data Val where
-  unitV  : Val
-  numV   : ℕ → Val
-  tupV   : Val → Val → Val
-  closV  : Env Γ → (t ∷ Γ) ⊢ u → Val
-  closV₂ : Env Γ → (t ∷ u ∷ Γ) ⊢ v → Val
+  unitV  : Val unitT
+  numV   : ℕ → Val numT
+  tupV   : Val t → Val u → Val (tupT t u)
+  closV  : Env Γ → (t ∷ Γ) ⊢ u → Val (t ⇒ u)
+  closV₂ : Env Γ → (t ∷ u ∷ Γ) ⊢ v → Val (/ t / u ⇒ v)
 --  closVₙ : Env Γ → (l ++ Γ) ⊢ t → Val
 
-Env Γ = {t : Ty} → t ∈ Γ → Val
+data Env where
+  []  : Env []
+  _∷_ : Val t → Env Γ → Env (t ∷ Γ)
 
--- _`++_ : Env l → Env Γ → Env (l ++ Γ)
--- _`++_ ls env = {!!}
+lookup-val : Env Γ → t ∈ Γ → Val t
+lookup-val (v ∷ γ) here = v
+lookup-val (v ∷ γ) (there x) = lookup-val γ x
 
-∅ : Env []
-∅ ()
 
-infixr 8 _`∷_
-
-_`∷_ : ∀ {Γ t} → Val → Env Γ → Env (t ∷ Γ)
-(v `∷ γ) here = v
-(v `∷ γ) (there x) = γ x
-
-data _⊢_↓_ : Env Γ → Γ ⊢ t → Val → Set
+data _⊢_↓_ : Env Γ → Γ ⊢ t → Val t → Set
 
 -- get : {val : Val} {e : Γ ⊢ t} → (γ ⊢ e ↓ val) → Val
 -- get {val = val} _ = val
@@ -157,7 +147,7 @@ data _⊢_↓_ where
 
   ↓var  :
           (x : t ∈ Γ)
-        → γ ⊢ (var x) ↓ γ x
+        → γ ⊢ (var x) ↓ lookup-val γ x
 
   ↓num  :
         γ ⊢ (num n) ↓ (numV n)
@@ -198,14 +188,14 @@ data _⊢_↓_ where
   ↓app  : ∀ {f : Γ ⊢ t ⇒ u} {b : (t ∷ Δ) ⊢ u} {arg}
         → γ ⊢ f ↓ (closV δ b)
         → γ ⊢ arg ↓ v1
-        → (v1 `∷ δ) ⊢ b ↓ v2
+        → (v1 ∷ δ) ⊢ b ↓ v2
         → γ ⊢ (app f arg) ↓ v2
 
   ↓app₂ : ∀ {f : Γ ⊢ / t / u ⇒ v} {b : (t ∷ u ∷ Δ) ⊢ v} {arg1 arg2 v3}
         → γ ⊢ f ↓ (closV₂ δ b)
         → γ ⊢ arg1 ↓ v1
         → γ ⊢ arg2 ↓ v2
-        → (v1 `∷ v2 `∷ δ) ⊢ b ↓ v3
+        → (v1 ∷ v2 ∷ δ) ⊢ b ↓ v3
         → γ ⊢ (app₂ f arg1 arg2) ↓ v3
 
   -- ↓appₙ : ∀ {f : Γ ⊢ l ⭆ t} {b : (l ++ Δ) ⊢ t} {env : Env (l ++ Δ)} {args : List (Γ ⊢ _)} {args_all : All (Γ ⊢_) l} {out}

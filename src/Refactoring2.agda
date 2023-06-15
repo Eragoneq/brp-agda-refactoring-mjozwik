@@ -38,9 +38,9 @@ ref-curry (snd x) = snd (ref-curry x)
 ref-curry (var x) = var x
 ref-curry (fun x) = fun (ref-curry x)
 ref-curry (fun₂ x) = fun₂ (ref-curry x)
-ref-curry (app x arg) = app (ref-curry x) arg
-ref-curry (app₂ (fun₂ x) x₁ x₂) = app (app (fun (fun x)) x₂) x₁
-ref-curry (app₂ x y z) = app₂ (ref-curry x) y z
+ref-curry (app x arg) = app (ref-curry x) (ref-curry arg)
+ref-curry (app₂ (fun₂ x) x₁ x₂) = app (app (fun (fun x)) (ref-curry x₂)) (ref-curry x₁)
+ref-curry (app₂ x y z) = app₂ (ref-curry x) (ref-curry y) (ref-curry z)
 
 -- ex3 : [] ⊢ numT
 -- ex3 = ref-uncurry ex2
