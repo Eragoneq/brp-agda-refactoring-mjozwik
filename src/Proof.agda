@@ -3,8 +3,6 @@ open import Refactoring2
 import Relation.Binary.PropositionalEquality as Eq
 open Eq using (_≡_; refl; trans; sym; cong; cong-app; subst)
 open Eq.≡-Reasoning using (begin_; _≡⟨⟩_; step-≡; _∎)
--- open import Data.List.Relation.Unary.All
--- open import Data.List.Base using (map)
 
 private
   variable
@@ -42,8 +40,12 @@ ref-val (tupV x x₁)   = tupV (ref-val x) (ref-val x₁)
 ref-val (closV x x₁)  = closV (ref-env x) (ref-curry x₁)
 ref-val (closV₂ x x₁) = closV₂ (ref-env x) (ref-curry x₁)
 
+lp : (γ : Env Γ) → (x : t ∈ Γ) → lookup-val (ref-env γ) x ≡ ref-val (lookup-val γ x)
+lp (x ∷ xs) here = refl
+lp (x ∷ xs) (there y) = lp xs y
+
 val-eq : γ ⊢ q ↓ v → (ref-env γ) ⊢ (ref-curry q) ↓ (ref-val v)
-val-eq v@(↓var x) = {!!}
+val-eq {γ = γ} v@(↓var x) = subst (λ x₁ → _ ⊢ _ ↓ x₁) (lp γ x) (↓var x)
 val-eq ↓num = ↓num
 val-eq (↓tup x x₁) = ↓tup (val-eq x) (val-eq x₁)
 val-eq (↓add x x₁) = ↓add (val-eq x) (val-eq x₁)
@@ -59,6 +61,3 @@ val-eq (↓app₂ {f = var x} clos arg1 arg2 eval) = ↓app₂ (val-eq clos) (va
 val-eq (↓app₂ {f = app x y} clos arg1 arg2 eval) = ↓app₂ (val-eq clos) (val-eq arg1) (val-eq arg2) (val-eq eval)
 val-eq (↓app₂ {f = app₂ x y z} clos arg1 arg2 eval) = ↓app₂ (val-eq clos) (val-eq arg1) (val-eq arg2) (val-eq eval)
 
--- curry-semantics-proof : ∅ ⊢ p ↓ v → ∅ ⊢ (ref-curry p) ↓ v
--- sem-eq : γ ⊢ q ↓ v₀ → γ ⊢ (ref-curry q) ↓ v₁ → v₁ ≡v v₀
--- sem-eq x = {!!}

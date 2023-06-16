@@ -17,9 +17,9 @@ ref-uncurry (snd x) = snd (ref-uncurry x)
 ref-uncurry (var x) = var x
 ref-uncurry (fun x) = fun (ref-uncurry x)
 ref-uncurry (fun₂ x) = fun₂ (ref-uncurry x)
-ref-uncurry (app (app (fun (fun x)) arg2) arg1) = app₂ (fun₂ x) arg1 arg2
-ref-uncurry (app x arg) = app (ref-uncurry x) arg
-ref-uncurry (app₂ x x₁ x₂) = app₂ (ref-uncurry x) x₁ x₂
+ref-uncurry (app (app (fun (fun x)) arg2) arg1) = app₂ (fun₂ x) (ref-uncurry arg1) (ref-uncurry arg2)
+ref-uncurry (app x arg) = app (ref-uncurry x) (ref-uncurry arg)
+ref-uncurry (app₂ x x₁ x₂) = app₂ (ref-uncurry x) (ref-uncurry x₁) (ref-uncurry x₂)
 
 
 -- ex1 : [] ⊢ numT
