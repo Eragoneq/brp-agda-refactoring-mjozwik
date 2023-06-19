@@ -16,7 +16,7 @@ data Ty : Set where
 --  boolT : Ty
   tupT  : Ty → Ty → Ty
   _⇒_   : Ty → Ty → Ty
-  /_/_⇒_ : Ty → Ty → Ty → Ty
+--  /_/_⇒_ : Ty → Ty → Ty → Ty
 --  _⭆_   : List Ty → Ty → Ty
 
 -- List of types, with the type of the most recently bound variable on the right
@@ -86,10 +86,10 @@ data _⊢_ where
        ---------------
        → Γ ⊢ (t ⇒ u)
 
-  fun₂ :
-       (t ∷ u ∷ Γ) ⊢ v
-       --------------------
-       → Γ ⊢ (/ t / u ⇒ v)
+--  fun₂ :
+--       (t ∷ u ∷ Γ) ⊢ v
+--       --------------------
+--       → Γ ⊢ (/ t / u ⇒ v)
 
  --  funₙ :
  --         (l ++ Γ) ⊢ t
@@ -101,12 +101,12 @@ data _⊢_ where
        ---------
        → Γ ⊢ u
 
-  app₂ :
-         Γ ⊢ (/ t / u ⇒ v)
-       → Γ ⊢ t
-       → Γ ⊢ u
-       --------
-       → Γ ⊢ v
+--  app₂ :
+--         Γ ⊢ (/ t / u ⇒ v)
+--       → Γ ⊢ t
+--       → Γ ⊢ u
+--       --------
+--       → Γ ⊢ v
 
  -- appₙ :
  --        Γ ⊢ (l ⭆ t)
@@ -118,7 +118,7 @@ data Val where
   numV   : ℕ → Val numT
   tupV   : Val t → Val u → Val (tupT t u)
   closV  : Env Γ → (t ∷ Γ) ⊢ u → Val (t ⇒ u)
-  closV₂ : Env Γ → (t ∷ u ∷ Γ) ⊢ v → Val (/ t / u ⇒ v)
+--  closV₂ : Env Γ → (t ∷ u ∷ Γ) ⊢ v → Val (/ t / u ⇒ v)
 --  closVₙ : Env Γ → (l ++ Γ) ⊢ t → Val
 
 data Env where
@@ -179,8 +179,8 @@ data _⊢_↓_ where
   ↓fun  : ∀ {b}
         → γ ⊢ (fun {t} {Γ} {u} b) ↓ (closV γ b)
 
-  ↓fun₂ : ∀ {b}
-        → γ ⊢ (fun₂ {t} {u} {Γ} {v} b) ↓ (closV₂ γ b)
+--  ↓fun₂ : ∀ {b}
+--        → γ ⊢ (fun₂ {t} {u} {Γ} {v} b) ↓ (closV₂ γ b)
 
   -- ↓funₙ : ∀ {b}
   --       → γ ⊢ (funₙ {l} {Γ} {t} b) ↓ (closVₙ γ b)
@@ -191,12 +191,12 @@ data _⊢_↓_ where
         → (v1 ∷ δ) ⊢ b ↓ v2
         → γ ⊢ (app f arg) ↓ v2
 
-  ↓app₂ : ∀ {f : Γ ⊢ / t / u ⇒ v} {b : (t ∷ u ∷ Δ) ⊢ v} {arg1 arg2 v3}
-        → γ ⊢ f ↓ (closV₂ δ b)
-        → γ ⊢ arg1 ↓ v1
-        → γ ⊢ arg2 ↓ v2
-        → (v1 ∷ v2 ∷ δ) ⊢ b ↓ v3
-        → γ ⊢ (app₂ f arg1 arg2) ↓ v3
+--  ↓app₂ : ∀ {f : Γ ⊢ / t / u ⇒ v} {b : (t ∷ u ∷ Δ) ⊢ v} {arg1 arg2 v3}
+--        → γ ⊢ f ↓ (closV₂ δ b)
+--        → γ ⊢ arg1 ↓ v1
+--        → γ ⊢ arg2 ↓ v2
+--        → (v1 ∷ v2 ∷ δ) ⊢ b ↓ v3
+--        → γ ⊢ (app₂ f arg1 arg2) ↓ v3
 
   -- ↓appₙ : ∀ {f : Γ ⊢ l ⭆ t} {b : (l ++ Δ) ⊢ t} {env : Env (l ++ Δ)} {args : List (Γ ⊢ _)} {args_all : All (Γ ⊢_) l} {out}
   --       → γ ⊢ f ↓ (closVₙ δ b)

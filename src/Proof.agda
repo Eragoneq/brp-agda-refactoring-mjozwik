@@ -44,8 +44,11 @@ lp : (γ : Env Γ) → (x : t ∈ Γ) → lookup-val (ref-env γ) x ≡ ref-val 
 lp (x ∷ xs) here = refl
 lp (x ∷ xs) (there y) = lp xs y
 
+convert : ∀ {f b} → (γ ⊢ fun₂ f ↓ closV₂ δ b) → ((ref-env γ) ⊢ fun (fun f) ↓ closV (ref-env δ) (fun (ref-curry b)))
+convert x = {!!}
+
 val-eq : γ ⊢ q ↓ v → (ref-env γ) ⊢ (ref-curry q) ↓ (ref-val v)
-val-eq {γ = γ} v@(↓var x) = subst (λ x₁ → _ ⊢ _ ↓ x₁) (lp γ x) (↓var x)
+val-eq {γ = γ} (↓var x) = subst (λ y → _ ⊢ _ ↓ y) (lp γ x) (↓var x)
 val-eq ↓num = ↓num
 val-eq (↓tup x x₁) = ↓tup (val-eq x) (val-eq x₁)
 val-eq (↓add x x₁) = ↓add (val-eq x) (val-eq x₁)
