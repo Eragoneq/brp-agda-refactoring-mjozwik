@@ -6,6 +6,7 @@ open import Data.Nat using (ℕ; zero; suc; _<_; _≤?_; z≤n; s≤s)
 open import Relation.Nullary using (¬_)
 open import Language
 open import Refactoring2
+open import Proof
 
 
 -- EX 1 (basic arithmetic)
@@ -118,7 +119,7 @@ v10₁ : Val (numT ⇒ _)
 v10₁ = closV {t = numT} []
          (app₂ (fun₂ (add (var here) (var (there here)))) (num 5) (num 9))
 
-↓ex10 : [] ⊢ (ex10) ↓ v10₁
+↓ex10 : [] ⊢ (ref-curry ex10) ↓ v10
 ↓ex10 = ↓fun
 
 -- EX 11
@@ -157,12 +158,24 @@ v12 = numV 50
 ↓ex12 = ↓app₂ (↓app₂ ↓fun₂ ↓num ↓num ↓fun₂) ↓num ↓num (↓add (↓add (↓var here) (↓var (there here))) (↓add (↓var (there (there here))) (↓var (there (there (there here))))))
 
 ↓ex12₁ : [] ⊢ (ref-curry ex12) ↓ v12
-↓ex12₁ = ↓app₂
-        (↓app
-          (↓app ↓fun ↓num ↓fun)
-          ↓num
-          ↓fun₂
-        )
-        ↓num
-        ↓num
-        (↓add (↓add (↓var here) (↓var (there here))) (↓add (↓var (there (there here))) (↓var (there (there (there here))))))
+↓ex12₁ = ↓app (↓app (↓app (↓app ↓fun ↓num ↓fun) ↓num ↓fun) ↓num ↓fun) ↓num (↓add (↓add (↓var here) (↓var (there here))) (↓add (↓var (there (there here))) (↓var (there (there (there here))))))
+
+-- EX 13
+
+ex13 : [] ⊢ / numT / numT ⇒ numT
+ex13 = fun₂ (num zero)
+
+v13 : Val (/ numT / numT ⇒ numT)
+v13 = closV₂ [] (num zero)
+
+v13₁ : Val (numT ⇒ numT ⇒ numT)
+v13₁ = closV [] (fun (num zero))
+
+↓ex13 : [] ⊢ ex13 ↓ v13
+↓ex13 = ↓fun₂
+
+↓ex13₁ : [] ⊢ (ref-curry ex13) ↓ v13₁
+↓ex13₁ = ↓fun
+
+proof13 : (x : [] ⊢ ex13 ↓ v13) → ↓ex13₁ ≡ (val-eq x)
+proof13 ↓fun₂ = refl
