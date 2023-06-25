@@ -1,9 +1,7 @@
 open import Language
 open import Refactoring_uncurry
 import Relation.Binary.PropositionalEquality as Eq
-open Eq using (_≡_; refl; trans; sym; cong; cong-app; subst)
-open Eq.≡-Reasoning using (begin_; _≡⟨⟩_; step-≡; _∎)
-open import Examples
+open Eq using (_≡_; refl; subst)
 
 private
   variable
@@ -31,7 +29,7 @@ lp (x ∷ xs) here = refl
 lp (x ∷ xs) (there y) = lp xs y
 
 uncurry-proof : γ ⊢ q ⇓ v → (ref-env γ) ⊢ (ref-uncurry q) ⇓ (ref-val v)
-uncurry-proof {γ = γ} v@(⇓var x)                                          = subst (λ x₁ → _ ⊢ _ ⇓ x₁) (lp γ x) (⇓var x)
+uncurry-proof {γ = γ} v@(⇓var x)                                        = subst (λ x₁ → _ ⊢ _ ⇓ x₁) (lp γ x) (⇓var x)
 uncurry-proof ⇓num                                                      = ⇓num
 uncurry-proof (⇓tup x x₁)                                               = ⇓tup (uncurry-proof x) (uncurry-proof x₁)
 uncurry-proof (⇓add x x₁)                                               = ⇓add (uncurry-proof x) (uncurry-proof x₁)

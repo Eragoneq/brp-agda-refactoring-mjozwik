@@ -1,9 +1,5 @@
-import Relation.Binary.PropositionalEquality as Eq
-open Eq using (_≡_; refl)
 open import Data.List.Base
-open import Data.Empty using (⊥; ⊥-elim)
-open import Data.Nat using (ℕ; zero; suc; _<_; _≤?_; z≤n; s≤s)
-open import Relation.Nullary using (¬_)
+open import Data.Nat using (ℕ; zero)
 open import Language
 open import Refactoring_curry
 open import Refactoring_uncurry

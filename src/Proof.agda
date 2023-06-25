@@ -1,8 +1,7 @@
 open import Language
 open import Refactoring_curry
 import Relation.Binary.PropositionalEquality as Eq
-open Eq using (_≡_; refl; trans; sym; cong; cong-app; subst)
-open Eq.≡-Reasoning using (begin_; _≡⟨⟩_; step-≡; _∎)
+open Eq using (_≡_; refl; subst)
 
 private
   variable

@@ -1,9 +1,6 @@
 open import Data.List.Base
-open import Data.List.Relation.Unary.All using (All)
-import Relation.Binary.PropositionalEquality as Eq
-open Eq using (_≡_; refl; trans; sym; cong; cong-app; subst)
-open Eq.≡-Reasoning using (begin_; _≡⟨⟩_; step-≡; _∎)
-open import Data.Nat using (ℕ; zero; suc; _<_; _≤?_; z≤n; s≤s; _+_)
+-- open import Data.List.Relation.Unary.All using (All)
+open import Data.Nat using (ℕ; _+_)
 
 infix  8 _,_
 infixr 7 _⇒_

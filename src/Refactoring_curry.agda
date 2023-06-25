@@ -1,5 +1,4 @@
 open import Data.List.Base
-open import Data.Nat using (ℕ; zero; suc; _<_; _≤?_; z≤n; s≤s; _+_)
 open import Language
 
 private
