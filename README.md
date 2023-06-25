@@ -17,3 +17,7 @@ An example of the currying refactoring, where uncurrying is the transformation f
 
 ## Version
 This project uses Agda version `2.6.3`, as well as Agda standard library version `1.7.2`.
+
+## Branches
+There has been some progress done on the currying which uses tuples instead of special language constructs. 
+For anyone interested in continuing the work and implementing it with tuples, this might be a good starting point. 
